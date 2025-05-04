@@ -4,3 +4,35 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+[workspace]
+members = [
+    # Day 1 Content
+    "day1/hello_world",
+    "day1/vars_mut_shadow",
+    "day1/function_returns",
+    "day1/borrow_reference",
+    "day1/text_input",
+    "day1/auth",
+    "day1/login",
+    "day1/auth_enum",
+    "day1/login_enum",
+    "day1/auth_enum_data",
+    "day1/login_enum_data",
+    "day1/auth_enum_option",
+    "day1/login_enum_option",
+    "day1/auth_struct",
+    "day1/login_struct",
+    "day1/auth_vec",
+    "day1/login_vec",
+    "day1/vector_growth",
+    "day1/auth_hashmap",
+    "day1/login_hashmap",
+    "day1/hash_vec_bench",
+    "day1/hash_vec_search",
+    "day1/auth_json",
+    "day1/login_json",
+    "day1/auth_hash",
+    "day1/login_hash",
+    "day1/login_manager",
+    "day1/auth_login_manager",
+]
