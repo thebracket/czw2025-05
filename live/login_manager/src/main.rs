@@ -52,6 +52,12 @@ fn add_user(username: String, password: String) {
     save_users(&users);
 }
 
+fn delete_user(username: String) {
+    let mut users = get_users();
+    users.retain(|user| { user.username != username });
+    save_users(&users);
+}
+
 fn main() {
     let cli = Args::parse();
     match cli.command {
@@ -60,6 +66,9 @@ fn main() {
         }
         Some(Commands::Add { username, password, admin }) => {
             add_user(username, password);
+        }
+        Some(Commands::Delete { username }) => {
+            delete_user(username);
         }
         None => {
             println!("Run with --help to see instructions");

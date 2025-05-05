@@ -67,7 +67,6 @@ pub fn get_users() -> Vec<User> {
 
 pub fn save_users(users: &Vec<User>) {
     let users_path = Path::new("users.json");
-    let users = get_default_users();
     let users_json = serde_json::to_string(&users).unwrap();
     std::fs::write(users_path, users_json).unwrap();
 }
