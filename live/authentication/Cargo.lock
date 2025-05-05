@@ -5,10 +5,3 @@ version = 4
 [[package]]
 name = "authentication"
 version = "0.1.0"
-
-[[package]]
-name = "hello_world2"
-version = "0.1.0"
-dependencies = [
- "authentication",
-]
