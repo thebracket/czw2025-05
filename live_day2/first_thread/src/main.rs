@@ -1,17 +1,30 @@
-fn hello_thread(n: u32) {
-    println!("Hello from thread {n}");
-}
+use std::thread;
 
 fn main() {
-    println!("Hello from the main thread");
+    const N_THREADS: usize = 8;
 
-    let mut handles = Vec::new();
-    for i in 0..10 {
-        let thread_handle = std::thread::spawn(
-            move || { hello_thread(i) }
-        );
-        handles.push(thread_handle);
-    }
-    //thread_handle.join().unwrap();
-    handles.into_iter().for_each(|h| h.join().unwrap());
+    let to_add: Vec<u32> = (0..5000).collect();
+    let chunks = to_add.chunks(5000 / N_THREADS);
+    
+    let sum = thread::scope(|s| {
+        let mut thread_handles = Vec::new();
+
+        for chunk in chunks {
+            let thread_handle = s.spawn(move || {
+                let mut sum = 0;
+                for i in chunk {
+                    sum += i;
+                }
+                sum
+            });
+            thread_handles.push(thread_handle);
+        }
+
+        thread_handles
+            .into_iter()
+            .map(|handle| handle.join().unwrap())
+            .sum::<u32>()
+    });
+    
+    println!("Sum is {sum}");
 }
