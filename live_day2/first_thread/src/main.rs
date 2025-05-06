@@ -19,7 +19,7 @@ fn main() {
             });
             thread_handles.push(thread_handle);
         }
-
+        
         thread_handles
             .into_iter()
             .map(|handle| handle.join().unwrap())
