@@ -1,30 +1,29 @@
-use std::thread;
+use std::sync::mpsc;
+
+enum Command {
+    SayHello, Quit
+}
 
 fn main() {
-    const N_THREADS: usize = 8;
+    let (tx, rx) = mpsc::channel::<Command>();
 
-    let to_add: Vec<u32> = (0..5000).collect();
-    let chunks = to_add.chunks(5000 / N_THREADS);
-    
-    let sum = thread::scope(|s| {
-        let mut thread_handles = Vec::new();
-
-        for chunk in chunks {
-            let thread_handle = s.spawn(move || {
-                let mut sum = 0;
-                for i in chunk {
-                    sum += i;
+    let handle = std::thread::spawn(move || {
+        while let Ok(command) = rx.recv() {
+            match command {
+                Command::SayHello => println!("Hello"),
+                Command::Quit => {
+                    println!("Quitting now");
+                    break;
                 }
-                sum
-            });
-            thread_handles.push(thread_handle);
+            }
         }
-        
-        thread_handles
-            .into_iter()
-            .map(|handle| handle.join().unwrap())
-            .sum::<u32>()
     });
-    
-    println!("Sum is {sum}");
+
+    let my_tx = tx.clone();
+    for _ in 0 .. 10 {
+        tx.send(Command::SayHello).unwrap();
+    }
+    println!("Sending quit");
+    tx.send(Command::Quit).unwrap();
+    handle.join().unwrap();
 }
