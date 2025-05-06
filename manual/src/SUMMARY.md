@@ -152,7 +152,7 @@
         - [Multiple States - Extension Layers](./day4/simple_tower_layer_multi_state.md)
         - [Quick Recap on State and Layers](./day4/simple_tower_recap.md)
         - [Nesting Multiple Routers](./day4/nesting.md)
-    - [gRPC](./grpc_intro.md)
+    - [gRPC]()
         - [Hello Tonic - Protocol Definition](./day4/grpc_hello.md)
         - [Hello Tonic - Project Definition and Build](./day4/grpc_hello2.md)
         - [Hello Tonic - The Server](./day4/grpc_hello3.md)
