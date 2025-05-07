@@ -3,7 +3,7 @@ use authentication::{get_users, User};
 use axum::{Extension, Json};
 use axum::extract::Path;
 use axum::http::StatusCode;
-use axum::routing::get;
+use axum::routing::{get, post};
 use serde::{Deserialize, Serialize};
 use tokio::net::TcpListener;
 
@@ -20,10 +20,20 @@ async fn main() -> anyhow::Result<()> {
         .route("/hello_json", get(hello_json_route))
         .route("/all_users", get(all_users_route))
         .route("/user/{username}", get(one_user_route))
+        .route("/add_user", post(add_user_route))
         .layer(Extension(shared_users));
     axum::serve(listener, app).await?;
 
     Ok(())
+}
+
+async fn add_user_route(
+    Extension(users): Extension<Arc<Mutex<Vec<User>>>>,
+    axum::extract::Json(new_user): axum::extract::Json<User>,
+) -> Result<StatusCode, StatusCode> {
+    let mut users = users.lock().map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+    users.push(new_user);
+    Ok(StatusCode::CREATED)
 }
 
 async fn one_user_route(
