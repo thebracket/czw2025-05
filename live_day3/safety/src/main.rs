@@ -1,25 +1,36 @@
-use std::sync::Arc;
+struct Cat(String);
+
+struct CatFeeder<'a> {
+    cat: &'a mut Cat
+}
+
+impl Cat {
+    fn feed(&mut self) {
+        self.0 = format!("{} (purring)", self.0);
+    }
+}
+
+impl<'a> CatFeeder<'a> {
+    fn feed(&mut self) {
+        self.cat.feed();
+    }
+}
 
 fn main() {
-    let list = vec![1, 2, 3, 4, 5];
-
-    //safe_verbose(&list);
-    //less_verbose(&list);
-    //safe_panic(&list);
-    //not_good(&list);
-
-    println!("Top");
+    let mut feeders = Vec::new();
     {
-        //let n = MyStruct::new();
-        println!("Call");
-        //borrow_me(&n);
-        println!("Return");
-        //let pointer = Box::new(MyStruct::new());
-        let shared_pointer = Arc::new(MyStruct::new());
-        let shared_pointer2 = shared_pointer.clone();
-        let shared_pointer3 = shared_pointer.clone();
+        let mut cats = vec![
+            Cat("Frodo".to_string()),
+            Cat("Bilbo".to_string()),
+            Cat("Pippin".to_string()),
+        ];
+
+        for cat in cats.iter_mut() {
+            feeders.push(CatFeeder{ cat })
+        }
     }
-    println!("Bottom");
+
+    feeders.iter_mut().for_each(|f| f.feed());
 }
 
 fn borrow_me(s: &MyStruct) {
