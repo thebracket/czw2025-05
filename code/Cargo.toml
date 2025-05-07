@@ -65,5 +65,5 @@ members = [
     "day2/rayon_scopes",
     "day2/rayon_nested_pools",
     "day2/rayon_broadcast",
-    "day2/rayon_join",
+    "day2/rayon_join", "day3/axum_hello", "day3/axum_users1", "day3/axum_users_arc", "day3/reqwest_client",
 ]
