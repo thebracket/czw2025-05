@@ -1,36 +1,53 @@
-async fn hello() {
-    println!("Hello, world!");
+use std::path::Path;
+use anyhow::Context;
+use serde::Deserialize;
+
+fn maybe_read_a_file() -> Result<String, std::io::Error> {
+    let my_file = Path::new("myfile.txt");
+    std::fs::read_to_string(my_file)
 }
 
-async fn double(n: i32) -> i32 {
-    n * 2
+fn file_to_uppercase() -> Result<String, std::io::Error> {
+    let contents = maybe_read_a_file()?;
+    Ok(contents.to_uppercase())
 }
 
-use std::time::Duration;
-use tokio::task::spawn_blocking;
-
-async fn hello_delay(task: u64, time: u64) {
-    println!("Task {task} has started");
-    tokio::time::sleep(Duration::from_millis(time)).await;
-    let result = spawn_blocking(move || {
-        std::thread::sleep(Duration::from_millis(time));
-    }).await;
-    println!("Task {task} is done.");
+#[derive(Deserialize, Debug)]
+struct User {
+    name: String,
+    password: String,
 }
 
-#[tokio::main]
-async fn main() {
-    let result = tokio::join!(double(4), double(2));
-    hello().await;
-    hello_delay(10, 5).await;
+type MyError  = Box<dyn std::error::Error + Sync + Send>;
+
+fn load_users() -> Result<Vec<User>, UsersError> {
+    let my_file = Path::new("users.json");
+    let raw_text = std::fs::read_to_string(my_file)
+        .inspect_err(|err|{
+          println!("Oh dear");  
+        }  )
+        .context("This really wasn't meant to happen")
+        .map_err(|e| UsersError::FileNotFound)?;
+    let users: Vec<User> = serde_json::from_str(&raw_text)
+        .map_err(|_| UsersError::InvalidJson)?;
+    Ok(users)
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-    
-    #[tokio::test]
-    async fn test_double() {
-        
+use thiserror::Error;
+
+#[derive(Debug, Error)]
+enum UsersError {
+    #[error("File does not exist")]
+    FileNotFound,
+    #[error("Invalid JSON")]
+    InvalidJson,
+}
+
+fn main() {
+    match load_users() {
+        Ok(text) => println!("File contents: {text:?}"),
+        Err(e) => {
+            println!("An error occurred: {e:?}");
+        },
     }
 }
