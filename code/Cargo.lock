@@ -220,6 +220,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "axum_post"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "authentication",
+ "axum",
+ "serde",
+ "tokio",
+]
+
+[[package]]
 name = "axum_users1"
 version = "0.1.0"
 dependencies = [
@@ -1432,6 +1443,16 @@ dependencies = [
 
 [[package]]
 name = "reqwest_client"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "authentication",
+ "reqwest",
+ "tokio",
+]
+
+[[package]]
+name = "reqwest_client_post"
 version = "0.1.0"
 dependencies = [
  "anyhow",
