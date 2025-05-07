@@ -1,86 +1,54 @@
-struct Cat(String);
+use std::any::Any;
+use std::fmt::Debug;
 
-struct CatFeeder<'a> {
-    cat: &'a mut Cat
+pub trait Animal: Debug {
+    fn speak(&self);
 }
 
-impl Cat {
-    fn feed(&mut self) {
-        self.0 = format!("{} (purring)", self.0);
+trait Downcastable {
+    fn as_any(&self) -> &dyn Any;
+}
+
+#[derive(Debug)]
+struct Cat {}
+impl Animal for Cat {
+    fn speak(&self) {
+        println!("Meow!");
     }
 }
 
-impl<'a> CatFeeder<'a> {
-    fn feed(&mut self) {
-        self.cat.feed();
+impl Downcastable for Cat {
+    fn as_any(&self) -> &dyn Any {
+        self
     }
+}
+
+#[derive(Debug)]
+struct Dog {}
+impl Animal for Dog {
+    fn speak(&self) {
+        println!("Woof!");
+    }
+}
+
+
+
+fn speak_twice(animal: &impl Animal) {
+    animal.speak();
+    animal.speak();
+}
+
+fn cat_factory() -> impl Animal {
+    Cat{}
 }
 
 fn main() {
-    let mut feeders = Vec::new();
-    {
-        let mut cats = vec![
-            Cat("Frodo".to_string()),
-            Cat("Bilbo".to_string()),
-            Cat("Pippin".to_string()),
-        ];
-
-        for cat in cats.iter_mut() {
-            feeders.push(CatFeeder{ cat })
+    let animals: Vec<Box<dyn Downcastable>> = vec![Box::new(Cat{}),];
+    for animal  in animals.iter() {
+        if let Some(cat) = animal.as_any().downcast_ref::<Cat>() {
+            // I finally know that I crave lasagna
         }
     }
-
-    feeders.iter_mut().for_each(|f| f.feed());
-}
-
-fn borrow_me(s: &MyStruct) {
-    // Do something cool here
-}
-
-struct MyStruct {
-    n: i32
-}
-
-impl Drop for MyStruct {
-    fn drop(&mut self) {
-        println!("Dropping MyStruct");
-    }
-}
-
-impl MyStruct {
-    fn new() -> Self {
-        Self {n: 42}
-    }
-
-    fn get(&mut self) -> i32 {
-        self.n
-    }
-}
-
-
-fn safe_verbose(list: &Vec<i32>) {
-    if let Some(n) = list.get(5) {
-        // Use the element
-        println!("The value of element is {}", n);
-    } else {
-        // Handle not available
-        println!("There is no value at index 5");
-    }
-}
-
-fn less_verbose(list: &Vec<i32>) {
-    let Some(n) = list.get(5) else {
-        return
-    };
-    println!("The value of element is {}", n);
-}
-
-fn safe_panic(list: &Vec<i32>) {
-    println!("{}", list[5]);
-}
-
-fn not_good(list: &Vec<i32>) {
-    unsafe {
-        println!("{}", list.get_unchecked(5));
-    }
+    
+    
 }
