@@ -143,6 +143,7 @@
         - [Calling Python from Rust](./day4/python_from_rust.md)
     - [Structuring Rust](./day4/file_structure.md)
     - [Workspaces](./day4/workspaces.md)
+    - [Dockerize](./day4/docker.md)
     - [Break]()
     - [Working with SQL and Environment Variables](./day4/databases.md)
     - [Break]()

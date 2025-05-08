@@ -14,7 +14,7 @@ async fn main() -> anyhow::Result<()> {
     let users = get_users();
     let shared_users = Arc::new(Mutex::new(users));
 
-    let listener = TcpListener::bind("127.0.0.1:3001").await?;
+    let listener = TcpListener::bind("0.0.0.0:3001").await?;
     let app = axum::Router::new()
         .route("/", get(hello_route))
         .route("/hello_json", get(hello_json_route))
