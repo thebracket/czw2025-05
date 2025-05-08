@@ -1,0 +1,9 @@
+[package]
+name = "webserver_simple"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow = "1.0.98"
+axum = "0.8.4"
+tokio = { version = "1.45.0", features = ["full"] }
